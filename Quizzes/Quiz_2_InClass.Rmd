@@ -1,0 +1,22 @@
+---
+title: "Quiz_2_Inclass"
+author: "Kaden Pickering"
+date: "2/2/2022"
+output: html_document
+---
+
+“All work presented is my own. I have not communicated with or worked with anyone else on this quiz.”- Kaden Pickering
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(here)
+
+df <- read_excel(here("data-2/slu_graduates_17_21.xlsx"))
+```
+
+```{r}
+f <- df %>% mutate(across(everything(),
+                           .fns = ~replace(., . ==  "STATS" , "STAT")))
+```
+
