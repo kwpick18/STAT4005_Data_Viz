@@ -1,0 +1,39 @@
+---
+title: "Exercises_3"
+author: "Kaden Pickering"
+date: "2/6/2022"
+output: html_document
+---
+
+# Exercise 1: Examine the data set on on page 6 of this link. The graph now includes all of the data points. However, explain why this graph is still not a good visualization of the data set. What could be done to improve the graph?
+
+This graph still is not a good visualization because many of the points are plotted over eachother making the data misleading at first glance and making the reader think that there are less data points than there really are. Using geom_jitter would improve the graph by adding small variation in each of the points so that all 23 points would be visible and taken into account when determining the damage factor due to temperature at launch. 
+
+# 8.1.2 
+# Exercise 1: Pick 1 of the 3 examples (stand your ground, climate change, or covid cases), and summarize why that graphic is not ethical. Make sure to include the context that the graph was created in from Section 8.3 in your explanation.
+
+In the "Stand your ground" example, the graphic is not ethical because it is shown in a way to manipulate our most basic perceptions of graphs by flipping the y-axis so the greater numbers are closer to the origin and the smaller numbers are closer to the top. At first glance to someone who doesn't spend much time looking at the graph, you would think that gun violence murders decreased heavily after the law was passed. The unethical part of this graph comes in when it is involved in a political scheme to change the public perceptions of the George Zimmerman acquittal. It's not ethical to try to trick people into agreeing with the judgement of a court of law by showing them graphicsthat are not easily readable to an untrained or uneducated eye. 
+
+# Exercise 2
+A hypothetical scenario that would use 2 of the 12 principles listed could be a study done by 10 white males from well off backgrounds doing research on incarceration rate of African American males in the United States who's fathers have been or are currently incarcerated themselves. The study would be biased because (#3) the team is not diverse and will be heavily biased in their research of the subject and without proper instruction or explanation, the study could be harmful to society to make young African American's feel that there is no hope for them if their Father's are or have been incarcerated. There needs to be feasible solutions to (#8) empower the subjects to make to make better informed decisions to avoid that fate. 
+
+# Exercise 3a. 
+https://www.economist.com/graphic-detail/2021/02/22/evidence-from-britain-shows-covid-19-vaccines-are-very-effective 
+
+# Exercise 3b. 
+I couldn't find a graphic that showed vaccines are not working anywhere. While I'm sure there are some out there that are used politically to show they aren't very effective, all the graphs I see show a steep decline after recieving the vaccine. 
+
+
+# Section 8.2
+
+# Example 2. 
+To make a graph more humanized and non-interactive, you could use a timeline plot with each lynching that took place on it with a profile connected to each of the people on the plot. While the profiles would be interactive, each data point would be visible and present for you to click on and read more about the person rather than clumping them into state lines. 
+
+# Exercise 3. 
+One takeaway is it's incredibly important in data visualization ethics to increase understanding of a subject while also minimizing harm as implicit biases are always present and need to be brought to the forefront before publishing any work. 
+Another takeaway is you need to be deliberate in how you "represent, interact, and annotate" your data in order to have the desired effect you want your data to have. 
+The third takeaway is all visualizations are algorithmic by nature and built into those algorithms are human biases. In order to have effective, non-damaging visualizations, they need to be picked through and examined over and over again to ensure that it is a productive and truthful tool for society to use. 
+
+# Exercise 4.
+The chart uses emotion to better convey the tragedies to appeal to something that we all can fathom in our lives, that being how quickly time goes and how little time we actually have on this earth. When talking only about deaths in large numbers, it is impossible to fathom that thought because we do not know what death is like as we are still living. When appealing to the other side of the story, which is the life of these people and how many more days they could have lived, it makes us especially emathetic for the victims as our time here is so precious and knowing those remaining days can be taken from us at any moment.   
+
