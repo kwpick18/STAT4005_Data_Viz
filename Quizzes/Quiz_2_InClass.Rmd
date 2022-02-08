@@ -20,3 +20,63 @@ f <- df %>% mutate(across(everything(),
                            .fns = ~replace(., . ==  "STATS" , "STAT")))
 ```
 
+```{r}
+df_long <- df %>% pivot_longer(3:8, names_to = "type", values_to = "discipline")
+
+df_major <- df_long %>% 
+  filter(type == "major1" | type == "major2" | type == "major3")
+```
+
+
+## Question 1 
+
+```{r}
+filtered_data <- 
+df_major %>%
+  filter(!is.na(discipline)) %>%
+  group_by(discipline) %>%
+  summarise(nstudents = n()) %>%
+  arrange(desc(nstudents)) %>%
+  slice(1:10) %>%
+  mutate(most_pop = fct_reorder(.f = discipline, .x = nstudents))
+ggplot(data = filtered_data, aes(x = most_pop, y = nstudents)) +
+  geom_point() +
+  geom_segment(aes(x = most_pop, xend = most_pop, y = 0, yend = nstudents)) +
+  coord_flip() +
+  labs( y = "Proportion of Female Majors in the Past 5 Years")
+```
+
+
+
+
+
+## Question 2 
+
+```{r}
+df_major <- 
+  df_long %>%
+    filter(type == "major1" | type == "major2" | type == "major3")
+  
+df_stat <- 
+  df_major %>% 
+    filter(discipline == "STAT") 
+
+df_statjoin <- 
+  semi_join(df_long, df_stat, by = "adm_id") %>%
+  filter(type == "minor1" | type == "minor2" | type == "minor3")
+
+df_nostat <- df_statjoin %>%
+  filter(!is.na(discipline)) %>%
+  group_by(discipline) %>%
+  summarise(nstudent = n()) %>%
+  mutate(discipline = fct_reorder(discipline, nstudent)) 
+```
+
+```{r}
+ggplot(data = df_nostat, aes(x = discipline, y = nstudent)) +
+  geom_col() + 
+  coord_flip()
+```
+
+
+
