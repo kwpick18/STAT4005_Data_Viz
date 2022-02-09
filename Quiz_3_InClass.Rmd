@@ -20,5 +20,5 @@ One of the principles that is hard to execute would be hard to execute would be 
 
 Question 4. 
 Emotions being used in visualizations can make the impact of the data stronger on the reader because there is passion and emotions being put into the visualization. I think that can be dangerous because with emotions comes bias and with bias comes inadequate work that leads to misleading visualizations. Data visualizations should be void of emotions because in order to obtain a truly objective look at a subject, you can't be biased one way or the other. 
-
+ 
 Question 5. 
