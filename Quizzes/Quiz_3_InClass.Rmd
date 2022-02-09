@@ -1,0 +1,24 @@
+---
+title: "Quiz_3_InClass"
+author: "Kaden Pickering"
+date: "2/9/2022"
+output: html_document
+---
+
+“All work presented is my own. I have not communicated with or worked with anyone else on this quiz.”
+
+Question 1. 
+1. done
+2. done
+3. done
+
+
+Question 2. Two advantages of using Github are for collaboration on projects being made easier, which in our case for the most part, means that Dr. Higham can access our work quicker easier. Another advantage is that you can easily go back to a version of your work before there was an error and see where you may have gone wrong from that point. 
+
+Question 3. 
+One of the principles that is hard to execute would be hard to execute would be "Respect and invite fair criticism while promoting the identification and open discussion of errors, risks, and unintended consequences of our work." I think this would be hard because taking criticism of something you've worked so hard to create is tough at times for all people, and while you may have tried to think from every angle on how it would effect people, it still may not be enough. For example, if you say that vaccines are effective at reducing hospitilizations from Covid and a group of vaccinated individuals who were hospitalized with covid come to criticize your work, you need to be open about the fact that your work is not conclusory, but instead a majority of samples in the study are indeed more protected from the virus. It may take a moral bump on you but it is something that needs to be done. 
+
+Question 4. 
+Emotions being used in visualizations can make the impact of the data stronger on the reader because there is passion and emotions being put into the visualization. I think that can be dangerous because with emotions comes bias and with bias comes inadequate work that leads to misleading visualizations. Data visualizations should be void of emotions because in order to obtain a truly objective look at a subject, you can't be biased one way or the other. 
+ 
+Question 5. 
