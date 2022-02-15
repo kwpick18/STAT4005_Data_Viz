@@ -1,0 +1,39 @@
+---
+title: "Quiz_04_Takehome"
+author: "Kaden Pickering"
+date: "2/15/2022"
+output: html_document
+---
+
+“All work presented is my own, and I have followed all rules for collaboration.”
+
+I collaborated with Claire Dudley and Emil Zetterquist for this quiz. 
+
+```{r}
+library(leaflet)
+library(tidyverse)
+library(devtools)
+library(maps) 
+
+us.cities <- maps::us.cities
+```
+
+```{r}
+us.capitals <- 
+us.cities %>%
+  filter(., capital == "2")
+
+```
+
+```{r}
+capital_map <- leaflet(us.capitals) %>%
+  setView(lng = -98.583, lat = 39.833, zoom = 4) %>% 
+  addTiles() %>%
+  addProviderTiles(providers$Stamen.Terrain) %>% 
+  addMarkers(lng = us.capitals$long, lat = us.capitals$lat,
+             clusterOptions = markerClusterOptions(),
+             popup = paste("Name:", us.capitals$name, "<br>", "Population:", us.capitals$pop, "<br>"))
+
+capital_map
+```
+
