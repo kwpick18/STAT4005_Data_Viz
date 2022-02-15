@@ -1,0 +1,86 @@
+---
+title: "Homework Exercises 4"
+author: "Kaden Pickering"
+date: "2/15/2022"
+output: html_document
+---
+
+I worked with Claire Dudley and Emil Zetterquist to complete this assignment.
+```{r}
+library(tidyverse)
+hpi_df <- read_csv("data-2/hpi-tidy.csv")
+```
+
+## Exercise 1 
+```{r}
+library(maps)
+library(tidyverse)
+world_df <- ggplot2::map_data("world")
+ggplot(data = world_df,
+            mapping = aes(x = long, y = lat,
+                          group = group)) +
+  geom_polygon() + 
+  coord_map(projection = "mercator")
+
+```
+
+```{r}
+world_df <- 
+  world_df %>%
+  rename("Country" = "region") 
+```
+
+```{r}
+hpi_world <- 
+  left_join(world_df, hpi_df, by ="Country")
+```
+
+```{r}
+ggplot(data = hpi_world,
+            mapping = aes(x = long, y = lat,
+                          group = group, fill = Wellbeing )) +
+  geom_polygon( color = "black") +
+  coord_map(projection = "mercator") +
+  theme_void() + 
+  scale_fill_viridis_b()
+```
+
+# Exercise 2 
+```{r}
+world_df <- 
+  world_df %>%
+  mutate(across("Country", str_replace,"USA","United States of America")) 
+```
+
+```{r}
+hpi_world <- 
+  left_join(world_df, hpi_df, by ="Country")
+```
+
+
+```{r}
+ggplot(data = hpi_world,
+            mapping = aes(x = long, y = lat,
+                          group = group, fill = Wellbeing )) +
+  geom_polygon( color = "black") +
+  coord_map(projection = "mercator") +
+  theme_void() + 
+  scale_fill_viridis_b()
+```
+
+# Exercise 3 
+```{r}
+ggplot(data = hpi_world,
+            mapping = aes(x = long, y = lat,
+                          group = group, fill = Wellbeing )) +
+  geom_polygon( color = "black") +
+  coord_map(projection = "gilbert", xlim = c(-180, 180)) +
+  theme_void() + 
+  scale_fill_viridis_b()
+```
+
+# Exercise 4
+The source says that Greenland is being represented as far too large on the map, about 550% too big. 
+
+# Exercise 5 
+The relative size of of Greenland becomes much more realistifc compared to Africa when using globular and gilbert projections. 
