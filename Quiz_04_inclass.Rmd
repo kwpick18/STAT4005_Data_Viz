@@ -1,0 +1,48 @@
+---
+title: "Quiz_04_inclass"
+author: "Kaden Pickering"
+date: "2/16/2022"
+output: html_document
+---
+
+“All work presented is my own. I have not communicated with or worked with anyone else on this quiz.”
+
+```{r}
+library(tidyverse)
+library(here)
+alcohol_df <- read_csv(here("data-2/alcohol.csv"))
+world_df <- ggplot2::map_data("world")
+```
+
+# Question 1 
+
+```{r}
+world_df <-
+   world_df %>%
+   rename("country" = "region")
+```
+
+```{r}
+alcohol_joined <-
+   left_join(world_df, alcohol_df,
+             by = "country")
+```
+
+```{r}
+library(leaflet)
+library(maps)
+library(devtools)
+
+ggplot(data = alcohol_df,
+            mapping = aes(x =long, y = lat,
+                          group = group, fill = beer_servings)) +
+  geom_polygon( color = "blue") +
+  coord_map(projection = "globular") +
+  theme_void() + 
+  scale_fill_viridis_b()
+
+```
+# couldn't get it to work but think im on the right track so it wouldn't knit unfortunately. 
+# Question 2. 
+
+If i were to use something other than a map, I'd want to look at something like a timeline or barchart. In a timeline, I'd like to see how much is consumed everyday by these countries and in a barchart just to compare them easily side by side. 
