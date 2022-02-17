@@ -1,0 +1,18 @@
+---
+title: "Exercises_05"
+author: "Kaden Pickering"
+date: "2/17/2022"
+output: html_document
+---
+
+## Section 9.1: What is Shiny?
+
+
+# Exercise 1: 
+  The app is interactive because you can change the slide bars for number of statistics in the sample, the intercept on the graph, the slope of the line, and the standard deviation of residuals. Each time you change one of the slide bars to a different setting, the scatterplot at the bottom changes. 
+  
+# Exercise 2. 
+The outputs of the app are multiple different graphs and tables explaining what your inputs did to the data. 
+
+# Exercise 3. 
+I've chosen to look at the Culture of Insight's "Crime Watch" app. The app allows the user to change their location to any place in England, Northern Ireland, or Wales, or they can use their current location in those 3 countries as well. The output that comes out is a zoomed-in map of whatever location you chose and that map shows longitudinal and latitudinal locations of all crimes that have taken place within a 1 mile radius of that location in the past month. It also returns a bar chart of all incidents, grouped by category, within the last month in that location. The interesting part is the bar chart for me which shows the type of crime committed and shows them in order by how often each on happens. It would be extremely informative if you were looking to move somewhere in those 3 countries. 
