@@ -1,0 +1,50 @@
+---
+title: "Quiz_05_inclass"
+author: "Kaden Pickering"
+date: "2/23/2022"
+output: html_document
+---
+
+“All work presented is my own. I have not communicated with or worked with anyone else on this quiz.”
+
+
+## Question 1.  
+Consider the following two bar plots using the palmerpenguins data set. The first is a plot of the penguin species while the second is a plot of the average bill length for each species. Which of the two graphs is appropriate to construct? Give a one sentence reason.
+
+The bar plot of penguins species is the appropriate one to plot because there is no underlying variability in the plot that we are not accounting for while in the bar plot of average bill length, our data may be skewed by outliers and we may get misinformation on what species actually has the longest bill length due to underlying variability. 
+
+## Question 2. 
+Use the Happy Planet Index data set to construct a graph that does not properly show variability in the underlying data. Recall that some variables in this data set are LifeExpectancy, Wellbeing, Footprint, and Region of the world.
+
+```{r}
+library(tidyverse)
+library(here)
+hpi_df <- read_csv(here("data-2/hpi-tidy.csv"))
+
+ggplot(data = hpi_df %>% group_by(Region) %>%
+         summarise(average_happiness = mean(HappyPlanetIndex, na.rm = TRUE)), 
+       aes(x = Region, y = average_happiness)) + 
+  geom_col() +
+  labs(y = "Average Happiness") 
+```
+
+## Question 3.  
+
+Fix your graph from the previous question so that it does properly show variability in the underlying data.
+
+```{r}
+happiness_plot <- 
+hpi_df %>%
+group_by(Region) %>%
+  summarise(meanhappy = mean(HappyPlanetIndex), 
+            sdhappy = sd(HappyPlanetIndex), 
+            nhappy = n()) %>%
+  mutate(l_se = meanhappy - sdhappy / sqrt(nhappy),
+         u_se = meanhappy + sdhappy / sqrt(nhappy))
+
+ggplot(data = happiness_plot, aes(x = Region, y = meanhappy)) + 
+  geom_point() +
+  geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
+  labs(x = "Region", y = "Average Happiness")
+```
+
