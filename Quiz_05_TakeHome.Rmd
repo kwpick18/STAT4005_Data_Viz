@@ -1,0 +1,70 @@
+---
+title: "Quiz_05_TakeHome"
+author: "Kaden Pickering"
+date: "2/22/2022"
+output: html_document
+---
+
+“All work presented is my own, and I have followed all rules for collaboration.”
+
+I worked with Claire Dudley on this quiz. 
+
+## Question 1.  Construct a graph that uses the number of Facebook friends each student has. 
+
+```{r}
+library(tidyverse) 
+statsurvey_df <- read_csv("data-2/stat113_survey.csv")
+
+# filter out NA's and 0's 
+friends_plot <- statsurvey_df %>%
+  filter(!is.na(Facebook)) %>%
+  filter(!Facebook == "0") 
+```
+
+```{r}
+stat_facebook <- 
+  friends_plot %>%
+  mutate(time_both = fct_inorder(time_both)) %>%
+  group_by(time_both) %>%
+  summarise(meanfb = mean(Facebook), 
+            sdfb = sd(Facebook), 
+            nfb = n()) %>%
+  mutate(l_se = meanfb - sdfb / sqrt(nfb),
+         u_se = meanfb + sdfb / sqrt(nfb)) 
+  
+
+ggplot(data = stat_facebook, aes(x = time_both, y = meanfb)) + 
+  geom_point() +
+  geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
+  labs(x = "Semester", y = "Average Facebook Friends")
+```
+
+## Question 2. Construct a graph that uses the proportion of students that have Facebook (assuming that 0 friends means that the student does not have a Facebook account and more than 0 friends means that the student does have a Facebook account).
+
+```{r}
+HaveFacebook <- statsurvey_df %>%
+  filter(!is.na(Facebook)) 
+
+HaveFacebook$hasfacebook = with(HaveFacebook, ifelse(Facebook > 0, 1, 0))
+```
+
+```{r}
+HaveFacebook <- 
+  HaveFacebook %>%
+  mutate(time_both = fct_inorder(time_both)) %>%
+   group_by(time_both) %>%
+   summarise(meanhasfb = mean(hasfacebook),
+             sdhasfb = sd(hasfacebook),
+             nhasfb = n()) %>%
+   mutate(l_se = meanhasfb - sdhasfb / sqrt(nhasfb),
+          u_se = meanhasfb + sdhasfb / sqrt(nhasfb))
+```
+
+```{r}
+ggplot(data = HaveFacebook, aes(x = time_both, y = meanhasfb)) + 
+   geom_point() +
+   geom_errorbar(aes(ymin = l_se, ymax = u_se)) +
+   labs(x = "Semester",
+        y = "Proportion of Students with Facebook")
+```
+
