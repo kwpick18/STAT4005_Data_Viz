@@ -1,0 +1,62 @@
+---
+title: "Quiz_06_Takehome"
+author: "Kaden Pickering"
+date: "3/1/2022"
+output: html_document
+---
+
+“All work presented is my own, and I have followed all rules for collaboration.”
+
+I collaborated with Claire Dudley and Emil Zetterquist on this quiz. 
+
+
+# Shiny app using the Happy Planet index Data set. 
+
+```{r}
+library(tidyverse)
+
+NFLstandings <- read_csv("data-2/standings.csv")
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(shiny) 
+
+NFLstandings
+var_choices <- names(NFLstandings)[c(4:10)]
+
+
+ui <- fluidPage(
+  sidebarLayout(sidebarPanel(
+    selectizeInput("teamchoice",
+                   label = "Choose a Team", choices = levels(factor(NFLstandings$team)),
+                   selected = "Miami"),
+    radioButtons("varchoice", label = "Choose a Statistic",
+                 choices = var_choices)),
+    mainPanel(plotOutput("scatterplot"))
+  
+))
+
+server <- function(input, output, session) {
+  
+  NFL_sub <- reactive({
+    NFLstandings %>% dplyr::filter(team == input$teamchoice)
+  })
+  
+  
+  output$scatterplot <- renderPlot({
+    ggplot(data = NFL_sub(), aes( x = year, y = .data[[ input$varchoice]])) + 
+      geom_line() +
+      theme_bw()
+      
+  })
+  
+
+}
+
+shinyApp(ui, server)
+```
+
+# Description
+The purpose of my app is to allow the user to select a team from the NFL and view different statistics, including but not limited to wins, losses, points for, points against, etc., in line graph from so that we can see trends over a certain amount of years. The user can choose what statistic they would like to explore with radio buttons and a line graph showing the trend of that statistic from year 2000 to 2019 will appear to the right of the inputs.  
