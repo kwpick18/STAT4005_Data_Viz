@@ -1,0 +1,89 @@
+---
+title: "Mini_Tutorial_1"
+author: "Kaden Pickering"
+date: "3/7/2022"
+output: html_document
+---
+“All work presented is my own. I have not communicated with or worked with anyone else on this exam.”
+
+# Data Visualization Concepts
+
+1. Introductory Statement: 
+
+  The goal of this section is to first explain what the seven parameters of the grammar of graphics are and how to use them. All are equally important for making a good visualization, but not all of them need to be used in each visualization in order for it to be effective. To show a graphic with most of the 7 parameters being used, I will use the stat113_survey.csv data set.   
+  
+```{r}
+library(tidyverse) 
+stat_students <- read_csv("data-2/stat113_survey.csv") 
+
+cleaned_stats <- stat_students %>%
+  filter(!is.na(Greek), !is.na(Sex)) %>% # get rid of the NA's for our statistics
+  filter(!Sex == "Choose") # get rid of the "choose" option (one person must have put in the answer wrong)
+
+ggplot(data = cleaned_stats, aes(x = Greek, fill = Sex)) + # using the new data set, see how many students are associated with Greek Life and fill the bars by association
+  geom_bar( position = "dodge") + # creates side-by-side bar comparisons for my graphic
+  # facet_wrap(~ Sex): This would create two seperate graphics, one for male and one for female. I can not apply it because my position argument doesn't work with faceted graphs. 
+  coord_flip() + # flip the graphic sideways if desired 
+  labs( x = "Greek Associated", y = "Number of Students") # change labels to more desirable titles 
+```
+  
+  
+  The second portion will be to explain what a "good" data visualization looks like that incorporates at least a decent portion of the 7 parameters for the grammar of graphics. While making useful graphics that are easily read and understood seems innate, there are many places where a statistician could go wrong. For this example, I will use the videogame_clean.csv file to show a visualization that may be misleading as to what games are most popular using the average_playtime variable, which could be misleading for a number of reasons, and then I will correct the visualization to show what games are actually the best according to the metascore variable. 
+ 
+```{r}
+library(tidyverse)
+favorite_games <- read_csv("data-2/videogame_clean.csv")
+
+fav_games_clean_avg <- favorite_games %>%
+  filter(!is.na(metascore)) %>% 
+  filter(!average_playtime == "0") %>%
+  arrange(desc(average_playtime)) %>%
+  slice(1:10) 
+
+ggplot(data = fav_games_clean_avg, aes(x = reorder(game, +average_playtime), y = average_playtime)) +
+  geom_col() +
+  coord_flip() +
+  labs(x = "Game", y = "Average Playtime") 
+```
+
+This graphic looks pretty good and probably makes you think that games like Murderous Pursuits, Alien Swarm, and Kathy Rain are the best games along with the rest of the top 10 most played. This could be misleading because there are other factors like price, platform, and demographic that play a part in how long a game is played for. Let's see what the results are for best games according to metascore. 
+```{r}
+fav_games_clean_meta <- favorite_games %>%
+  filter(!is.na(metascore)) %>% # filter NA's from data 
+  filter(!average_playtime == "0") %>% # filter 0's from avg playtime 
+  arrange(desc(metascore)) %>% # arrange from highest scored to lowest scored 
+  slice(1:10) # take the top 10 games only
+
+ggplot(data = fav_games_clean_meta, aes(x = reorder(game, +metascore), y = metascore)) +
+  geom_col() +
+  coord_flip() + 
+  labs( x = "Games", y = "MetaScore") 
+
+
+```
+
+In this graphic, the games were rated by professionals as to which are the best to play. The top 10 are completely different than in my other graphic with the top 3 being Half-Life 2, Grand Theft Auto V, and Portal 2. This shows that visualizations can be misleading depending on what information you are trying to portray as well as the data you use to get that information across. 
+
+ Lastly, I will show why some graphics are better to use than others when showing a visualization based on what you are trying to show. For instance, sometimes bar plots are better than polar plots and sometimes vice versa. How to decide which to use for what data set you are using is important. For this example, I will again use the videogame_clean.csv data set.
+ 
+```{r}
+barplot_example <- 
+favorite_games %>% 
+  select(game, owners) # get a data set with only columns we are interested in
+  
+ggplot(barplot_example, aes(x = owners, fill = owners))+ 
+  geom_bar() + # base for what I am creating
+  coord_polar() + # create the polar graph
+  theme_bw() # make it look nicer with a theme
+```
+ 
+ The coord_polar map above shows us a little bit about the portion of games that have the different categories of owners, but it is incredibly hard to read and not much can be said about the exact number of owners for each category. 
+
+```{r}
+ggplot(barplot_example, aes(x = owners, fill = owners))+ 
+  geom_bar() + # base for graphic to create, normal bar plot
+  theme_dark() + # make the graphic more easily readable
+  coord_flip() # flip the graphic sideways to read easier and see labels
+```
+
+ In the bar plot above, you can at the very least have a better idea of how many games fall into each category of ownership. You are not confused by the circular nature of the graph because we got rid of it. It's much more natural to look at a bar plot and decide how many games fall into each category of ownership. 

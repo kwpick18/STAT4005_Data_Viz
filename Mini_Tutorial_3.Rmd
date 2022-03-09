@@ -1,0 +1,58 @@
+---
+title: "Mini_Tutorial_3"
+author: "Kaden Pickering"
+date: "3/8/2022"
+output: html_document
+---
+“All work presented is my own. I have not communicated with or worked with anyone else on this exam.”
+
+# Expressing Uncertainty
+
+The goal of this section is to show how some plots, like bar plots for example, are bad visualizations when it comes to expressing variability in data. Some statistics in a sample can obscure data to make it seem like the output is telling a different story than should be told. For this section, I will use the athletesdata.csv file to show how a visualization can hide variability in statistics by comparing athlete salaries from their respective sports and see what sport pays it's players the most. 
+
+
+```{r}
+library(tidyverse)
+
+athlete_df <- read_csv("data-2/athletesdata.csv") 
+```
+
+```{r}
+clean_athlete <- 
+  athlete_df %>%
+  group_by(Sport) %>% # get data only for sports
+  mutate(ntotal = n()) %>% # count number of stats under each sport
+  select(Sport, salary) %>% # new data frame with only columns we are concerned with
+  summarise(combined_salary = sum(salary)) # add up all salaries from each sport to get how much is paid to each sport
+
+ggplot(clean_athlete, aes(x = reorder(Sport, +combined_salary), y = combined_salary, fill = Sport)) +
+  geom_col() +
+  coord_flip() +
+  labs(x = "Sport", y = "Combined Salaries") +
+  theme(legend.position = "none") 
+   
+  
+```
+
+From looking at this graph, it looks like baseball is far and away the highest paid sport. While this may be true, there may be some underlying data that skews these results that are not being shown in my graphic. In order to correct that and account for variability, I need to make a graphic that shows averages and standard deviations in order to see the variability in the numbers. 
+
+```{r}
+clean2_athlete <- # new data set
+  athlete_df %>% # using old data set
+  mutate(Sport = fct_inorder(Sport)) %>% # Create sport to incorporate all instances
+  group_by(Sport) %>%
+  summarise(meanpay = mean(salary), # create mean, sd, and n
+            sdpay = sd(salary), 
+            npay = n()) %>%
+  mutate(l_se = meanpay - sdpay / sqrt(npay),
+         u_se = meanpay + sdpay / sqrt(npay))
+
+ggplot(data = clean2_athlete, aes(x = Sport, y = meanpay)) + # create a plot that starts with mean
+  geom_point() +
+  geom_errorbar(aes(ymin = l_se, ymax = u_se)) + # input error bars to show variation in pay
+  labs(x = "Sport", y = "Average Pay") + # change the labels
+  coord_flip() # flip it sideways so easily readable
+
+```
+
+As you can see from the plot above, boxing actually pays it's performers more on average than any other sport. The reason that baseball was so high in our first plot was because it didn't account for the variability of pay of it's players. In fact, baseball is about 3rd or 4th on the list as far as dispersion of the data is concerned. Also, there were far more samples to consider in baseball than there were for the other sports at 27. Using techniques like the one I used can account for variability in the data and give you a visualization that is more spot on. 

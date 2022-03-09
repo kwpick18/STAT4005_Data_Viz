@@ -1,0 +1,52 @@
+---
+title: "Mini_Tutorial_2"
+author: "Kaden Pickering"
+date: "3/8/2022"
+output: html_document
+---
+
+“All work presented is my own. I have not communicated with or worked with anyone else on this exam.”
+
+# Mapping 
+
+The goal of this section is to produce a map of the counties in NYS. In the seperate counties, I've found a seperate data set with population census information for each of the counties. By combining the data sets, I will show each counties population for the year 2010 on the map. 
+
+```{r}
+library(tidyverse)
+county_df <- ggplot2::map_data("county") # load county data for the US
+
+NY_counties <- county_df %>%
+  filter(region == "new york") # filter only county data for NYS 
+
+ggplot(data = NY_counties,
+            mapping = aes(x = long, y = lat,
+                          group = group)) +
+  geom_polygon(fill = "white", color = "black") +
+  coord_map() +
+  theme_void() # create a simple map of New York using the latitude and longitude coordinates from the data set 
+
+```
+
+```{r}
+library(tidyverse) 
+Pop_estimates <- read_csv("Pop_estimates_counties.csv") # load the data set downloaded from the internet
+
+
+ Pop_estimates$Geography <- gsub('County', "", Pop_estimates$Geography) # get rid of "County" so the data sets match
+ 
+Pop_estimates$Geography <- tolower(Pop_estimates$Geography) # also need to have lowercase letters to match the other data set 
+
+```
+
+```{r}
+Pop_estimates <- 
+Pop_estimates %>%
+  rename("subregion" = "Geography")
+```
+
+
+```{r}
+counties_full <- full_join(Pop_estimates, NY_counties, by = "subregion") 
+```
+
+I was able to load the map of the New York Counties that I wanted to look at, but I couldn't combine my data set of interest with the map despite my best efforts. It could have something to do with how the data set was taken from the internet, or with the names of the counties in each respective set, but nevertheless, i was unsuccessful. 

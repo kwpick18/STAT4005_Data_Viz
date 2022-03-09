@@ -1,0 +1,59 @@
+---
+title: "Mini_Tutorial_4"
+author: "Kaden Pickering"
+date: "3/8/2022"
+output: html_document
+---
+
+# Shiny
+
+The goal of this section is to introduce the Shiny Application in R so that you can create reactive visualizations where the user can choose their own inputs and have the graphic change depending on what they chose. This app can be useful when trying to compare different statistics to each other quickly and not having to rewrite an entire chunk of code every time you want to change inputs. I will be using the athletesdata.csv data set to allow the user to view different sports and statistics that go along with the athletes from those sports.  
+
+```{r}
+library(tidyverse)
+
+athlete_stats <- read_csv("data-2/athletesdata.csv") 
+
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(shiny) 
+
+athlete_stats
+var_choices <- names(athlete_stats)[c(3,5:8)] # choose the variables you want as categories
+
+
+ui <- fluidPage(
+  sidebarLayout(sidebarPanel(
+    selectizeInput("sportchoice", # assign inputs 
+                   label = "Choose an Sport", choices = levels(factor(athlete_stats$Sport)), # message that user sees 
+                   selected = "Football"), # default choice is football
+    radioButtons("varchoice", label = "Choose a Category", # radio buttons so they can click through the categories to choose 
+                 choices = var_choices)),
+    mainPanel(plotOutput("histgraph")) # assigning our histogram output in the UI
+  
+))
+
+server <- function(input, output, session) {
+  
+  athlete_sub <- reactive({
+    athlete_stats %>% dplyr::filter(Sport == input$sportchoice)
+  }) # creating a reactive data set that we can use 
+  
+  
+  output$histgraph <- renderPlot({
+    ggplot(data = athlete_sub(), aes(x = .data[[ input$varchoice]])) + 
+      geom_histogram() +
+      theme_bw() # build the plot with renderplot so it's reactive, and then just construct a ggplot as you would without any reactivity involved. 
+      
+  })
+  
+
+}
+
+shinyApp(ui, server)
+```
+
+The shiny app I created is as standard as they come. With a drop down menu at the top, you can select what sport you are interested in viewing statistics on. With the radio buttons, you can easily select different categories of statistics you want to view. With each change of an input, the output changes which is the whole purpose of the app. You don't have to write any new code in order to view different statistics, sports, or whatever you are interested in. 
