@@ -1,0 +1,258 @@
+---
+title: "Midterm_Exam_inclass"
+author: "Kaden Pickering"
+date: "3/9/2022"
+output: html_document
+---
+
+“All work presented is my own. I have not communicated with or worked with anyone else on this exam.” - Kaden Pickering
+
+
+# Question 1: 
+```{r}
+library(tidyverse)
+library(here)
+pokemon_df <- read_csv(here("data-2/pokemon_full.csv"))
+pokemon_type <- pokemon_df %>% group_by(Type) %>% summarise(type_count = n())
+
+ggplot(data = pokemon_type, aes(x = Type, y = type_count)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Type",
+       y = "Count") +
+  coord_flip()
+```
+
+
+part a. 
+
+The grammar of graphics that are specified in this code are data (pokemon_df), mapping (x = Type, y = type_count), geom_function (geom_bar), a statistical transformation (identity), and a coordinate function (coord_flip). 
+
+part b. 
+
+We would want to do that because when a person takes a quick glance at a graphic, their instinct is to look from the top of the graph to the bottom. If we have the type ordered in descending order, it makes it easier for a reader to come to a conclusion on what statistic has the highest count quicker. If you have to look through the visualization for longer period of time, it can be annoying and inneffective. 
+
+ part c. 
+
+It's not okay to omit 0 from a bar or lollipop chart because it is important to have a common starting point in these plots for reference of how large the bars or lollis. If there was no common starting point, you couldn't look at the plot and be able to tell which is the largest bar. For scatterplots and point plots, the 0 could be omitted if there is no value equal to 0. In this case, it might give you a more zoomed in look at the plot and give you a better sense of the dispersion of points rather than looking at the plot starting at 0. 
+
+# Question 2. 
+Commit and push the exam. 
+
+# Question 3. 
+
+Something I learned about ethics in data visualization is that there are a set of guidelines and rules you must follow in order to have an ethical data set. For example, just one of these rules is you have to be careful about what to exclude from your visualizations as some of the data may seem unnecessary to you but could have big implications to somebody else. The Challenger example from class was a good instance of this where the scientists ommitted many data points that may have convinced analysts to halt a launch that ended up killing everyone on board a spacecraft. Although it could be accidental, you have to make sure you think ethically about the data you omit or keep in a visualization as it could affect the outcome of decisions in the future. 
+
+# Question 4. 
+
+part a. 
+
+```{r}
+library(maps)
+library(tidyverse)
+library(here)
+election_df <- read_csv(here("2020_county_pres.csv")) %>%
+  group_by(state_name) %>%
+  summarise(total_gop = sum(votes_gop),
+            total_dem = sum(votes_dem)) %>%
+  mutate(percent_gop = 100 * total_gop / (total_gop + total_dem)) %>%
+  mutate(state_name = str_to_lower(state_name))
+```
+
+```{r}
+library(tidyverse)
+state_df <- ggplot2::map_data("state") # load state data for the US
+
+
+ggplot(data = state_df,
+            mapping = aes(x = long, y = lat,
+                          group = group)) +
+  geom_polygon(fill = "white", color = "black") +
+  coord_map() +
+  theme_void()
+```
+
+```{r}
+joined_df <- left_join(election_df, state_df, by = c("state_name" = "region")) 
+
+ggplot(data = joined_df, aes(x = long, y = lat, group = group)) +
+  geom_polygon(colour = "black", aes(fill = percent_gop)) +
+  coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
+  theme_void() +
+  scale_fill_viridis_c()
+```
+
+part b. 
+
+The data frame R needs all of the rows which is way more than 50 to construct the map because the data set contains all the necessary information for R to draw the shapes that go along with the map. The polygonal nature of the US Map forces us to have a long list of code to draw every outline and border. 
+
+# Question 5. 
+
+```{r}
+library(tidyverse) 
+
+alcohol <- read_csv("data-2/alcohol.csv") 
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(shiny) 
+
+alcohol
+ 
+var_choices <- names(alcohol)[c(2:4)]
+
+
+ui <- fluidPage(
+  sidebarLayout(sidebarPanel(
+    selectizeInput("countrychoice",
+                   label = "Choose a Country", choices = levels(factor(alcohol$country)),
+                   selected = "Albania"),
+    radioButtons("varchoice", label = "Choose a Statistic",
+                 choices = var_choices)),
+    mainPanel(plotOutput("scatterplot")) 
+  
+))
+
+server <- function(input, output, session) {
+  
+  alcohol_sub <- reactive({
+    alcohol %>% dplyr::filter(country == input$countrychoice)
+  }) 
+  
+  
+  
+  output$scatterplot <- renderPlot({
+    ggplot(data = alcohol_sub(), aes(x = beer_servings, y = wine_servings)) + 
+      geom_dotplot() +
+      theme_bw() 
+      
+  })
+  
+
+}
+
+shinyApp(ui, server)
+```
+
+In Addition: 
+```{r}
+library(tidyverse)
+
+NFLstandings <- read_csv("data-2/standings.csv")
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(shiny) 
+
+alcohol
+var_choices <- names(alcohol)[c(2:4)]
+
+
+ui <- fluidPage(
+  sidebarLayout(sidebarPanel(
+    selectizeInput("alcoholchoice",
+                   label = "Choose a Drink", choices = levels(factor(alcohol$country)),
+                   selected = "Albania"),
+    radioButtons("varchoice", label = "Choose a Drink type",
+                 choices = var_choices)),
+    mainPanel(plotOutput("histograph"))
+  
+))
+
+server <- function(input, output, session) {
+  
+  alcohol_sub <- reactive({
+    alcohol %>% dplyr::filter(country == input$alcoholchoice)
+  })
+  
+  
+  output$histograph <- renderPlot({
+    ggplot(data = alcohol_sub(), aes( x = .data[[ input$varchoice]])) + 
+      geom_bar() +
+      theme_bw()
+      
+  })
+  
+
+}
+
+shinyApp(ui, server)
+```
+
+Australia example
+Ran out of time
+```{r}
+library(shiny)
+library(tidyverse)
+library(ggrepel)
+library(here)
+alcohol_df <- read_csv(here("data-2/alcohol.csv"))
+
+onecountry_df <- alcohol_df %>% filter(country == "Australia")
+
+ggplot(alcohol_df, aes(x = beer_servings, y = wine_servings)) +
+  geom_point() +
+  geom_label_repel(data = onecountry_df, aes(label = country)) +
+  geom_point(data = onecountry_df, size = 3, shape = 1)
+```
+
+# Question 6. 
+I will take no credit for Question 6, I am lost when looking at this shiny app and don't know how to draw a reactive graph for it. 
+
+# Question 7. 
+
+```{r}
+library(tidyverse)
+library(here)
+wta_df <- read_csv(here("data-2/wta_matches_2019.csv"))
+wta_long <- wta_df %>% pivot_longer(c(winner_name, loser_name),
+                                    names_to = "won_or_lost",
+                                    values_to = "player") %>%
+  select(won_or_lost, player, everything())
+```
+
+Going for partial credit 
+
+```{r}
+library(tidyverse) 
+
+athletes <- read_csv("data-2/athletesdata.csv") 
+
+athletes_clean <- athletes %>%
+  filter(Sport == "Football") 
+  
+  
+ggplot(athletes_clean, aes(x = Name, y = age)) +
+  geom_segment(aes( x = Name, xend = Name, y = 0, yend = age)) +
+  geom_point(size = 3, color = "red") 
+  
+  
+  
+```
+
+# Question 8
+
+part a. 
+
+This plot isn't the best to reference the top women's servers (or in my case, athletes ages) because the dot at the top of each segment serves no purpose for determining who the top player is. The line itself is sufficient enough to deterine who the best player is and all the dot at the top would do is make it hard to see the exact number that the value falls on. In the women's serve example, The numbers are even more spread out than in mine as far as how many serves each player makes throughout the season so being precise is key. 
+
+part b. 
+
+By changing the shape of the geom_point, we can see that we have an axis pointing directly to the number that corresponds with the length of the line. We can be more precise with our measurements and observations when usind different aesthetics to visualize the data. 
+```{r}
+library(tidyverse) 
+
+athletes <- read_csv("data-2/athletesdata.csv") 
+
+athletes_clean <- athletes %>%
+  filter(Sport == "Football") 
+  
+  
+ggplot(athletes_clean, aes(x = Name, y = age)) +
+  geom_segment(aes( x = Name, xend = Name, y = 0, yend = age)) +
+  geom_point(size = 3, color = "red", shape = 3)
+```
+
